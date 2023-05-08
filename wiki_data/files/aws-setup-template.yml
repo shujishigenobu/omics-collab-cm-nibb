@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
+Description: "Template for building the execution environment (virtual machine) for the RAN-seq exercise"
 
 Metadata:
   AWS::CloudFormation::Interface:
