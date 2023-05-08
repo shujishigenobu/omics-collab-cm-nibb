@@ -10,30 +10,17 @@ Metadata:
           - KeyName
       -
         Label:
-          default: CpuType
-        Parameters:
-          - CpuArchitecture
-      -
-        Label:
           default: InstanceType
         Parameters:
           - x86InstanceType
-          - ArmInstanceType
 
 Parameters:
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
     Description: "Name of the EC2 key pair to use"
-  CpuArchitecture:
-    Type: String
-    Default: "x86_64"
-    AllowedValues:
-      - "x86_64"
-      - "Arm"
-    Description: "CPU type for the EC2 instance" 
   x86InstanceType:
     Type: String
-    Default: t3.micro
+    Default: t3a.xlarge
     AllowedValues:
       - None
       - c1.medium
@@ -497,119 +484,7 @@ Parameters:
       - z1d.large
       - z1d.metal
       - z1d.xlarge 
-    Description: "Instance type for the EC2 instance (x86_64)"
-  ArmInstanceType:
-    Type: String
-    Default: "None"
-    AllowedValues:
-      - None
-      - a1.2xlarge
-      - a1.4xlarge
-      - a1.large
-      - a1.medium
-      - a1.metal
-      - a1.xlarge
-      - c6g.12xlarge
-      - c6g.16xlarge
-      - c6g.2xlarge
-      - c6g.4xlarge
-      - c6g.8xlarge
-      - c6g.large
-      - c6g.medium
-      - c6g.metal
-      - c6g.xlarge
-      - c6gd.12xlarge
-      - c6gd.16xlarge
-      - c6gd.2xlarge
-      - c6gd.4xlarge
-      - c6gd.8xlarge
-      - c6gd.large
-      - c6gd.medium
-      - c6gd.metal
-      - c6gd.xlarge
-      - c6gn.12xlarge
-      - c6gn.16xlarge
-      - c6gn.2xlarge
-      - c6gn.4xlarge
-      - c6gn.8xlarge
-      - c6gn.large
-      - c6gn.medium
-      - c6gn.xlarge
-      - c7g.12xlarge
-      - c7g.16xlarge
-      - c7g.2xlarge
-      - c7g.4xlarge
-      - c7g.8xlarge
-      - c7g.large
-      - c7g.medium
-      - c7g.metal
-      - c7g.xlarge
-      - g5g.16xlarge
-      - g5g.2xlarge
-      - g5g.4xlarge
-      - g5g.8xlarge
-      - g5g.metal
-      - g5g.xlarge
-      - im4gn.16xlarge
-      - im4gn.2xlarge
-      - im4gn.4xlarge
-      - im4gn.8xlarge
-      - im4gn.large
-      - im4gn.xlarge
-      - is4gen.2xlarge
-      - is4gen.4xlarge
-      - is4gen.8xlarge
-      - is4gen.large
-      - is4gen.medium
-      - is4gen.xlarge
-      - m6g.12xlarge
-      - m6g.16xlarge
-      - m6g.2xlarge
-      - m6g.4xlarge
-      - m6g.8xlarge
-      - m6g.large
-      - m6g.medium
-      - m6g.metal
-      - m6g.xlarge
-      - m6gd.12xlarge
-      - m6gd.16xlarge
-      - m6gd.2xlarge
-      - m6gd.4xlarge
-      - m6gd.8xlarge
-      - m6gd.large
-      - m6gd.medium
-      - m6gd.metal
-      - m6gd.xlarge
-      - r6g.12xlarge
-      - r6g.16xlarge
-      - r6g.2xlarge
-      - r6g.4xlarge
-      - r6g.8xlarge
-      - r6g.large
-      - r6g.medium
-      - r6g.metal
-      - r6g.xlarge
-      - r6gd.12xlarge
-      - r6gd.16xlarge
-      - r6gd.2xlarge
-      - r6gd.4xlarge
-      - r6gd.8xlarge
-      - r6gd.large
-      - r6gd.medium
-      - r6gd.metal
-      - r6gd.xlarge
-      - t4g.2xlarge
-      - t4g.large
-      - t4g.medium
-      - t4g.micro
-      - t4g.nano
-      - t4g.small
-      - t4g.xlarge
-    Description: "Instance type for the EC2 instance (Arm)"
-
-Conditions:
-  CpuType:
-    !Equals [!Ref CpuArchitecture, x86_64]
+    Description: "Instance type for the EC2 instance"
 
 Resources:
   VPC:
@@ -666,14 +541,8 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: !If
-        - CpuType
-        - !Ref x86InstanceType
-        - !Ref ArmInstanceType
-      ImageId: !If
-        - CpuType
-        - ami-0d979355d03fa2522 # Ubuntu 22.04 LTS x86_64
-        - ami-01a777eb1a2618535 # Ubuntu 22.04 LTS Arm
+      InstanceType: !Ref x86InstanceType
+      ImageId: "ami-0d979355d03fa2522" # Ubuntu 22.04 LTS x86_64
       KeyName: !Ref KeyName
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
@@ -686,4 +555,3 @@ Outputs:
   PublicIp:
     Description: "The public IP address of the EC2 instance"
     Value: !GetAtt EC2Instance.PublicIp
-
