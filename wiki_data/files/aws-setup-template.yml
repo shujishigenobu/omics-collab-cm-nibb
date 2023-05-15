@@ -20,6 +20,7 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: "10.0.0.0/16"
+      EnableDnsHostnames: true
       Tags:
         - Key: "Name"
           Value: "handson-vpc"
@@ -109,4 +110,3 @@ Outputs:
   PublicIp:
     Description: "The public IP address of the EC2 instance"
     Value: !GetAtt EC2Instance.PublicIp
-
